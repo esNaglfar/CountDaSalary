@@ -1,16 +1,15 @@
 #include <iostream>
 #include <vector>
 #include <string>
-
+#include <filesystem>
 #include <fstream>
+
 
 using namespace std;
 
 class Student
 {
-
 public:
-
 	Student(string& _name, float _salary, float _bonus)
 		: name(_name), salary(_salary), bonus(_bonus) {}
 
@@ -20,7 +19,7 @@ public:
 
 	void PrintData()
 	{
-		cout << "\nStudent: " + name + "\nSalary: " + to_string(salary) + "\nBonus: " + to_string(bonus);
+		cout << "\nStudent: " + name + "\nSalary: " + to_string(salary) + "\nBonus: " + to_string(bonus)+"\n==========\n";
 	}
 
 protected:
@@ -30,23 +29,34 @@ protected:
 };
 
 
-vector<Student> ReadStudentFile(string&& _filePath)
+vector<Student> ReadStudentFile(string&& _fileName)
 {
-	ifstream file(_filePath);
+
+	//filesystem::path path = filesystem::current_path().u8string() + "\\" + _fileName;
+	
+	//cout << path;
+	
+	ifstream file(_fileName);
+
 	vector<Student> vec;
 
 	string separator = ";";
+	
 
 
 	if (file.is_open())
 	{
 		string line;
-
 		while (getline(file, line))
 		{
 			string name = line.substr(0, line.find(separator));
-			float salary = stof(line.substr(1, line.find(separator)));
-			float bonus = stof(line.substr(2, line.find(separator)));
+			string other = line.substr(name.length()+1, line.length()-name.length());
+			string salary_text = other.substr(0, other.find(separator));
+			other = other.substr(salary_text.length() + 1, other.length() - name.length());
+			string bonus_text = other.substr(0, other.find(separator));
+			float salary = stof(salary_text);
+			float bonus = stof(bonus_text);
+
 			Student s(name, salary, bonus);
 			vec.push_back(s);
 		}
@@ -59,6 +69,17 @@ vector<Student> ReadStudentFile(string&& _filePath)
 
 int main()
 {
-	cout << "Hello";
-	ReadStudentFile("C:/Users/Naglfar/Desktop/vagh.txt")[0].PrintData();
+	setlocale(LC_ALL, "");
+
+	cout << "Hello!!!\n";
+
+	vector<Student> s = ReadStudentFile("C:/Users/Naglfar/source/repos/CountDaSalary/Debug/StudentsList.txt");
+
+	for(auto _s : s)
+	{
+		_s.PrintData();
+	}
+
+	cout << s.size();
+
 }
