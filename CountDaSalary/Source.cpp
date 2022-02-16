@@ -62,6 +62,19 @@ vector<Student> ReadStudentFile(string&& _fileName)
 	return vec;
 }
 
+void SaveVectorToFile(string&& _fileName, vector<Student> _vector)
+{
+	ofstream file;
+	
+	file.open(_fileName);
+
+	for (auto _s : _vector)
+	{
+		file << _s.GetStudentData();
+	}
+
+	file.close();
+}
 
 
 int main()
@@ -76,4 +89,8 @@ int main()
 	{
 		cout << _s.GetStudentData();
 	}
+
+	SaveVectorToFile("C:/Users/Naglfar/source/repos/CountDaSalary/Debug/StudentsList_OUT.txt", s);
+
+
 }
